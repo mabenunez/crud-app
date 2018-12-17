@@ -5,7 +5,7 @@ const users= [
     id: 1,
     name: "María",
     lastname: "Núñez",
-    age: 21
+    mail: "maria@gmail.com"
   },
 ];
 // importamos el modulo fs

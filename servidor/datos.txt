@@ -1,1 +1,1 @@
-[{"id":1,"name":"María","lastname":"Núñez","age":21},{"user":3,"puntos":1000}]
+[{"id":1,"name":"María","lastname":"Núñez","mail":"maria@gmail.com"},{"user":3,"puntos":1000}]
