@@ -18,19 +18,25 @@ $.ajax(
 });
 //POST
 $("#add").on("click", function() {
+    let addedName = $("#add-name").val();
+    let addedLastname = $("#add-lastname").val();
+    let addedPhone = $("#add-phone").val();
+    let addedMail = $("#add-mail").val()
+    //Poner la funcion de validar aqui, en vez de poner return res.status(400), mostrar un msj de error
     $.ajax(
         "http://localhost:3000/api/users",
         {
             method: "POST",
             data: {
-                name: $("#add-name").val(),
-                lastname: $("#add-lastname").val(),
-                phone: $("#add-phone").val(),
-                mail: $("#add-mail").val()
+                name: addedName,
+                lastname: addedLastname,
+                phone: addedPhone,
+                mail: addedMail
             }
         }
     )
 })
+
 //DELETE
 $(document).on("click", ".delete", function() {
     const id = $(this).parent().parent().parent().attr("id"); // poner un data-id para no tener tres parents
@@ -40,16 +46,18 @@ $(document).on("click", ".delete", function() {
         "http://localhost:3000/api/users/" + id,
         {
             method: "DELETE",
-            // success: function () {
-            //     $("#" + id).remove()
-            // }
         }
     ).done(function () {
         location.reload("http://localhost:3000/users/")
     })
 })
 $("#go-filter").click(function () {
-    $.ajax("/api/users?search=" + $("#filter").val(),
+    let search = $("#filter").val()
+    if(search.length === 0) {
+        alert("el campo de texto no puede estar vacío")
+        return
+    }
+    $.ajax("/api/users?search=" + search,
     ).done(function (data) {
         $(".main-container").html("")
         append(data)
@@ -57,9 +65,9 @@ $("#go-filter").click(function () {
 })
 function charLimit(clickedInput) {
     let maxlength = clickedInput.attr("maxlength");
-    let currentLength = 0;
     clickedInput.on("input", function(){
-        currentLength = currentLength + 1
+        var str = clickedInput.val()
+        let currentLength = str.length;
         $(this).siblings("p").html(currentLength + "/" + maxlength)
         // if( currentLength >= maxlength -1 ){
         //     console.log("f")
@@ -68,8 +76,17 @@ function charLimit(clickedInput) {
         //         }
     });
 }
-//ponerle una clase a estos inputs para que el de search no dispare esta funcion
-$("input").on("click", function() {
+$(".char-counted").on("click", function() {
     $(".chars").html("")
     charLimit($(this))
 })
+//nodemon bin/www --ignore datos.json
+/*
+-PONER UN MENSAJE EN EL CASO DE QUE SE BUSQUE CON CHARS QUE NO EXISTEN EN NINGUN USUARIO CARGADO
+-diseñar carteles de mensaje de error
+-validador de chars en los nombres/phones/mails
+-modals o carteles de success
+-si el input de search esta vacio, me traiga todos los usuarios
+-hacer que cuando se presione enter, baje al proximo campo de texto (en añadir y editar)
+-hacer que cuando se presione enter se active la búsqueda
+*/

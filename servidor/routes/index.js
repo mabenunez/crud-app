@@ -12,7 +12,10 @@ router.get("/users/add-user", function (req, res) {
 router.get("/users/edit-user", function (req, res) {
   res.sendFile( path.join(__dirname, "..", "public", "html", "edit-one.html"))  
 })
-
+function validateEmail(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email.toLowerCase());
+}
 /* GET home page. */
 router.get('/ping', function(req, res, next) {
   res.send("pong")
@@ -58,14 +61,18 @@ TENGO QUE VALIDAR QUE AL DAR VARIOS CLIC A ADD ME AÑADE MUCHAS VECES EL MISMO U
 router.post('/api/users', function(req, res, next) {
   let contenidoDelArchivo = fs.readFileSync('datos.json');
   let users = JSON.parse(contenidoDelArchivo);
-  console.log(users)
   const newUser = req.body;
   if(users.length == 0) {
     newUser.id = 1
   }else {
     const lastId = users[users.length-1].id
     newUser.id = lastId + 1;
-    console.log(lastId)
+  }
+  if (newUser.name.length === 0 || newUser.lastname.length === 0 || newUser.phone.length === 0 || newUser.mail.length === 0){
+    return res.status(400).end('faltan datos, llenar los campos correspondientes') //end termina el method
+  }
+  if (validateEmail(newUser.mail) === false){
+    return res.status(400).end('e-mail inválido')
   }
   users.push(newUser)
   fs.writeFileSync('datos.json', JSON.stringify(users));

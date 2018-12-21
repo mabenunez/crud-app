@@ -5,7 +5,6 @@ console.log(myParam)
 $.ajax(
     "http://localhost:3000/api/users/" + myParam
 ).done(function(data) {
-    console.log(data)
     $("#edit-name").val(data.name)
     $("#edit-lastname").val(data.lastname)
     $("#edit-phone").val(data.phone)
