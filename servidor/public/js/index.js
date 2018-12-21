@@ -1,3 +1,9 @@
+let mailError = "Ésta dirección de mail no es válida";
+let nameError = "Éste campo solo debe contener letras";
+let lastnameError = "Éste campo solo debe contener letras";
+let phoneError = "Éste campo solo debe contener números";
+let emptyError = "Éste campo debe ser completado";
+let errorSign = `<div class="error-msj"><span>${emptyError}</span></div>`;
 function append(data) {
     for (let i = 0; i < data.length; i++) {
         let id = data[i].id;
@@ -9,6 +15,10 @@ function append(data) {
         let deleteIcon = `<a href="/api/users/${id}"><i class="fas fa-trash-alt delete"></i></a>`;
         $(".main-container").append(`<div class="row" id="${id}">${name}${lastname}${phone}${mail}<div>${deleteIcon}${editIcon}</div></div>`)
     }
+}
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email.toLowerCase());
 }
 //GET ALL
 $.ajax(
@@ -22,7 +32,13 @@ $("#add").on("click", function() {
     let addedLastname = $("#add-lastname").val();
     let addedPhone = $("#add-phone").val();
     let addedMail = $("#add-mail").val()
-    //Poner la funcion de validar aqui, en vez de poner return res.status(400), mostrar un msj de error
+    if (validateEmail(addedMail) === false){
+        $("#add-mail").parent().append(`<div class="error-msj"><span>${mailError}</span></div>`)
+        setTimeout(function () {
+            $(".error-msj").remove();
+        }, 3000); 
+        return 
+    }
     $.ajax(
         "http://localhost:3000/api/users",
         {
@@ -36,7 +52,6 @@ $("#add").on("click", function() {
         }
     )
 })
-
 //DELETE
 $(document).on("click", ".delete", function() {
     const id = $(this).parent().parent().parent().attr("id"); // poner un data-id para no tener tres parents
@@ -54,13 +69,20 @@ $(document).on("click", ".delete", function() {
 $("#go-filter").click(function () {
     let search = $("#filter").val()
     if(search.length === 0) {
-        alert("el campo de texto no puede estar vacío")
+        $(".search-bar").append(`<div class="error-msj"><span>${emptyError}</span></div>`);
+        setTimeout(function () {
+            $(".error-msj").remove();
+        }, 3000); 
         return
     }
     $.ajax("/api/users?search=" + search,
     ).done(function (data) {
         $(".main-container").html("")
         append(data)
+        if(data.length === 0) {
+            $("#not-found").removeClass("hidden");
+        }
+        $(".search-bar").append(`<a href="/users/"><button>Go back</button></a>`);
     })
 })
 function charLimit(clickedInput) {
@@ -71,9 +93,7 @@ function charLimit(clickedInput) {
         $(this).siblings("p").html(currentLength + "/" + maxlength)
         // if( currentLength >= maxlength -1 ){
         //     console.log("f")
-        // } else{
-        //             console.log(maxlength - currentLength + " chars left");
-        //         }
+        // }
     });
 }
 $(".char-counted").on("click", function() {
@@ -82,11 +102,9 @@ $(".char-counted").on("click", function() {
 })
 //nodemon bin/www --ignore datos.json
 /*
--PONER UN MENSAJE EN EL CASO DE QUE SE BUSQUE CON CHARS QUE NO EXISTEN EN NINGUN USUARIO CARGADO
 -diseñar carteles de mensaje de error
 -validador de chars en los nombres/phones/mails
 -modals o carteles de success
--si el input de search esta vacio, me traiga todos los usuarios
 -hacer que cuando se presione enter, baje al proximo campo de texto (en añadir y editar)
 -hacer que cuando se presione enter se active la búsqueda
 */

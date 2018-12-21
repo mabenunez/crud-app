@@ -88,4 +88,35 @@ i {
   align-self: flex-end;
 }
 
+.error-msj {
+  width: 350px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background: rgba(228, 0, 0, 0.479);
+  transition: all 0.4s ease;
+  box-shadow: 0px 9px 20px rgba(75, 72, 72, 0.3);
+  text-align: center;
+}
+.error-msj span {
+  font-size: 12px;
+  color: #680000;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+#sure-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /*# sourceMappingURL=styles.css.map */

@@ -11,10 +11,22 @@
 <body>
     <main>
         <h1>Users</h1>
-        <section>
+        <div id="sure-modal">
+            <h2>Are you sure you want to delete this user?</h2>
             <div>
-                <input placeholder="Search for an user" id="filter" type="text">
-                <button id="go-filter">Go</button>
+                <button class="yes-choice">Yes</button>
+                <button class="no-choice">No</button>
+            </div>
+        </div>
+        <section>
+            <div class="search-bar">
+                <div>
+                    <input placeholder="Search for an user" id="filter" type="text">
+                    <button id="go-filter">Go</button>
+                </div>
+                <div id="not-found" class="error-msj hidden">
+                    <span>No existen usuarios que coincidan con ésta búsqueda</span>
+                </div>
             </div>
             <div class="main-container">
             </div>

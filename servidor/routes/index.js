@@ -20,7 +20,6 @@ function validateEmail(email) {
 router.get('/ping', function(req, res, next) {
   res.send("pong")
 });
-
 // router.get('/api/users', function(req, res, next) {
 //   let contenidoDelArchivo = fs.readFileSync('datos.json');
 //   let users = JSON.parse(contenidoDelArchivo);
@@ -35,7 +34,7 @@ router.get('/api/users/:id', function(req, res, next) {
       return res.json(users[i]);
     }
   }
-  res.status(404).send("El usuario no existe")
+  res.status(404).send("This user doesn't exist")
 });
 /*FILTER AND THEN GET*/
 router.get('/api/users', function (req, res) {
@@ -68,11 +67,15 @@ router.post('/api/users', function(req, res, next) {
     const lastId = users[users.length-1].id
     newUser.id = lastId + 1;
   }
+  //añadir que la length sea menor que 30
   if (newUser.name.length === 0 || newUser.lastname.length === 0 || newUser.phone.length === 0 || newUser.mail.length === 0){
-    return res.status(400).end('faltan datos, llenar los campos correspondientes') //end termina el method
+    return res.status(400).end('all fields are required') //end termina el method
   }
-  if (validateEmail(newUser.mail) === false){
-    return res.status(400).end('e-mail inválido')
+  if (validateEmail(newUser.mail) === false ){
+    return res.status(400).end('invalid e-mail')
+  }
+  if(!(/^\d+$/.test(newUser.phone))){
+    return res.status(400).end('invalid phone number');
   }
   users.push(newUser)
   fs.writeFileSync('datos.json', JSON.stringify(users));
@@ -89,6 +92,15 @@ router.put("/api/users/:id", function(req, res, next) {
     if (users[i].id == id) {
       users[i] = newInfo;
     }
+  }
+  if (newInfo.name.length === 0 || newInfo.lastname.length === 0 || newInfo.phone.length === 0 || newInfo.mail.length === 0){
+    return res.status(400).end('all fields are required') //end termina el method
+  }
+  if (validateEmail(newInfo.mail) === false){
+    return res.status(400).end('invalid e-mail')
+  }
+  if(!(/^\d+$/.test(newInfo.phone))){
+    return res.status(400).end('invalid phone number');
   }
   fs.writeFileSync('datos.json', JSON.stringify(users));
   res.json(newInfo);
