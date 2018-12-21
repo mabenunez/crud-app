@@ -1,40 +1,8 @@
-var express = require('express');
-var router = express.Router();
-const users= [
-  {
-    id: 1,
-    name: "María",
-    lastname: "Núñez",
-    mail: "maria@gmail.com"
-  },
-];
-// importamos el modulo fs
+const express = require('express');
+const router = express.Router();
+const path = require('path');
 const fs = require('fs');
-
-// esto es para escribir en un archivo
-fs.writeFileSync('datos.txt', JSON.stringify(users));
-
-// leo el contenido del archivo, que me devuelve algo diabolico llamado buffer
-let contenidoDelArchivo = fs.readFileSync('datos.txt');
-// transformamos lo que me devolvio en un json
-let contenidoDelArchivoEnJson = JSON.parse(contenidoDelArchivo);
-
-// itero simplemente para mostrar que funciono!
-for (var i = 0; i < contenidoDelArchivoEnJson.length; i++) {
-  console.log(contenidoDelArchivoEnJson[i]);
-}
-
-// agrego un nuevo objeto al array
-contenidoDelArchivoEnJson.push({ user: 3, puntos: 1000 })
-// vuelvo a escribir los datos en el archivo, para actualizarlo
-fs.writeFileSync('datos.txt', JSON.stringify(contenidoDelArchivoEnJson));
-
-//necesito meter el codigo de arriba  en cada una de las funciones de get/post/put/delete
-
-/*estoy creando una url para que en vez de abrir el archivo desde nuestra compu (carpeta cliente),
-entre a una url y esos html/css sea lo que muestra 
-          CAMBIAAAAAAARRRR lo de abajo con las rutas de las carpetsa
-*/
+let filtered = [];
 router.get("/users", function (req, res) {
   res.sendFile( path.join(__dirname, "..", "public", "html", "index.html"))  
 })
@@ -46,48 +14,90 @@ router.get("/users/edit-user", function (req, res) {
 })
 
 /* GET home page. */
-router.get('/api/users', function(req, res, next) {
-  res.json(users);
+router.get('/ping', function(req, res, next) {
+  res.send("pong")
 });
+
+// router.get('/api/users', function(req, res, next) {
+//   let contenidoDelArchivo = fs.readFileSync('datos.json');
+//   let users = JSON.parse(contenidoDelArchivo);
+//   res.json(users);
+// });
 router.get('/api/users/:id', function(req, res, next) {
+  let contenidoDelArchivo = fs.readFileSync('datos.json');
+  let users = JSON.parse(contenidoDelArchivo);
   const id = req.params.id;
   for (let i = 0; i < users.length; i++) {
     if (users[i].id == id) {
-      res.json(users[i]);
-    } else {
-      res.status(404).send("El usuario no existe")
+      return res.json(users[i]);
     }
   }
+  res.status(404).send("El usuario no existe")
 });
-/* POST */
+/*FILTER AND THEN GET*/
+router.get('/api/users', function (req, res) {
+  let search= req.query.search;
+  let contenidoDelArchivo = fs.readFileSync('datos.json');
+  let users = JSON.parse(contenidoDelArchivo);
+  if (search && search.length > 0) {
+    filtered = users.filter (function (u) {
+      //lo siguiente es igual a decir que si se cumplen esas condiciones, devuelve true, else, devuelve false
+      return u.name.toLowerCase().indexOf(search.toLowerCase()) >= 0 || 
+      u.lastname.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+      u.phone.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+      u.mail.toLowerCase().indexOf(search.toLowerCase()) >= 0
+    })
+    res.json(filtered);
+  } else {
+    res.json(users);
+  }
+})
+/* POST
+TENGO QUE VALIDAR QUE AL DAR VARIOS CLIC A ADD ME AÑADE MUCHAS VECES EL MISMO USUARIO buscar si el usuario esta repetido
+*/
 router.post('/api/users', function(req, res, next) {
+  let contenidoDelArchivo = fs.readFileSync('datos.json');
+  let users = JSON.parse(contenidoDelArchivo);
+  console.log(users)
   const newUser = req.body;
-  const lastId = users[users.length-1].id
-  newUser.id = lastId + 1;
+  if(users.length == 0) {
+    newUser.id = 1
+  }else {
+    const lastId = users[users.length-1].id
+    newUser.id = lastId + 1;
+    console.log(lastId)
+  }
   users.push(newUser)
+  fs.writeFileSync('datos.json', JSON.stringify(users));
   res.json(users);
 });
 /* PUT */
 router.put("/api/users/:id", function(req, res, next) {
+  let contenidoDelArchivo = fs.readFileSync('datos.json');
+  let users = JSON.parse(contenidoDelArchivo);
   const id = req.params.id;
   let newInfo = req.body;
+  newInfo.id = id;
   for(let i = 0; i < users.length; i++) {
     if (users[i].id == id) {
       users[i] = newInfo;
     }
-    return res.json(newInfo);
   }
+  fs.writeFileSync('datos.json', JSON.stringify(users));
+  res.json(newInfo);
 })
 /* DELETE */
 router.delete("/api/users/:id", function (req, res, next) {
+  let contenidoDelArchivo = fs.readFileSync('datos.json');
+  let users = JSON.parse(contenidoDelArchivo);
   const id = req.params.id;
   for (let i = 0; i < users.length; i++) {
     if (users[i].id == id) {
       users.splice(i, 1)
     }
-    return res.json(users);
   }
+  res.json(users);
+  fs.writeFileSync('datos.json', JSON.stringify(users));
 })
 
-//necesito la posicion
 module.exports = router;

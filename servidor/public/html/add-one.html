@@ -11,29 +11,31 @@
     <main>
         <h1>Add User</h1>
         <section>
-            <label for="add-name">Name</label>
-            <input id="add-name" type="text">
-        
-            <label for="add-lastname">Lastname</label>
-            <input id="add-lastname" type="text">
-        
-            <label for="add-phone">Phone Number</label>
-            <input id="add-phone" type="text">
-        
-            <label for="add-mail">Email</label>
-            <input id="add-mail" type="text">
-        
+            <div class="input-container">
+                <label for="add-name" >Name</label>
+                <input id="add-name" maxlength="30" type="text">
+                <p id="name-chars" class="chars"></p>
+            </div>
+            <div class="input-container">
+                <label for="add-lastname">Lastname</label>
+                <input id="add-lastname" type="text">
+                <p id="lastname-chars" class="chars"></p>
+            </div>
+            <div class="input-container">
+                <label for="add-phone">Phone Number</label>
+                <input id="add-phone" type="text">
+                <p id="phone-chars" class="chars"></p>
+            </div>
+            <div class="input-container">
+                <label for="add-mail">Email</label>
+                <input id="add-mail" type="text">
+                <p id="mail-chars" class="chars"></p>
+            </div>
             <div>
                 <button id="add">Add</button>
             </div>
         </section>
-        
-        
     </main>
-    
-
-
-
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="../js/index.js"></script>
 </body>
