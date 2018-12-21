@@ -1,6 +1,5 @@
 let mailError = "Ésta dirección de mail no es válida";
 let nameError = "Éste campo solo debe contener letras";
-let lastnameError = "Éste campo solo debe contener letras";
 let phoneError = "Éste campo solo debe contener números";
 let emptyError = "Éste campo debe ser completado";
 let errorSign = `<div class="error-msj"><span>${emptyError}</span></div>`;
@@ -12,10 +11,11 @@ function append(data) {
         let mail = `<div>${data[i].mail}</div>`;
         let lastname = `<div>${data[i].lastname}</div>`;
         let editIcon = `<a target="_blank" href="/users/edit-user?id=${id}"><i class="fas fa-user-edit"></i></a>`;
-        let deleteIcon = `<a href="/api/users/${id}"><i class="fas fa-trash-alt delete"></i></a>`;
+        let deleteIcon = `<a data-id="${id}"><i class="fas fa-trash-alt delete"></i></a>`;
         $(".main-container").append(`<div class="row" id="${id}">${name}${lastname}${phone}${mail}<div>${deleteIcon}${editIcon}</div></div>`)
     }
 }
+
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email.toLowerCase());
@@ -54,18 +54,48 @@ $("#add").on("click", function() {
 })
 //DELETE
 $(document).on("click", ".delete", function() {
-    const id = $(this).parent().parent().parent().attr("id"); // poner un data-id para no tener tres parents
-    //o, el elemnto con class row que tenga el id tal
-    window.location.href = window.location.href + "/" + id;
-    $.ajax(
-        "http://localhost:3000/api/users/" + id,
-        {
-            method: "DELETE",
-        }
-    ).done(function () {
-        location.reload("http://localhost:3000/users/")
+    const id = $(this).parent().parent().parent().attr("id");
+    $("#modal-container").removeClass("hidden");
+    $(".yes-choice").parent().attr("href", `/api/users/${id}`)
+    $(".yes-choice").on("click", function (params) {
+        window.location.href = window.location.href + "/" + id;
+        $.ajax(
+            "http://localhost:3000/api/users/" + id,
+            {
+                method: "DELETE",
+            }
+        ).done(function () {
+            location.reload("http://localhost:3000/users/")
+        })
     })
+    $(".no-choice").on("click", function (params) {
+        $("#modal-container").addClass("hidden");
+    })
+
 })
+
+
+//`<a href="/api/users/${id}"></i></a>`
+
+
+
+//     window.location.href = window.location.href + "/" + id;
+    
+//     $.ajax(
+//         "http://localhost:3000/api/users/" + id,
+//         {
+//             method: "DELETE",
+//         }
+//     ).done(function () {
+//         location.reload("http://localhost:3000/users/")
+//     })
+
+
+
+
+
+
+
 $("#go-filter").click(function () {
     let search = $("#filter").val()
     if(search.length === 0) {
