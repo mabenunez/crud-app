@@ -9,9 +9,9 @@
     <title>Users</title>
 </head>
 <body>
-    <div id="modal-container" class="hidden">
+    <div id="delete-modal-container" class="hidden modal-container">
         <div class="modal-screen"></div>
-        <div id="sure-modal">
+        <div id="sure-modal" class="modal-card">
             <h2>Are you sure you want to delete this user?</h2>
             <div>
                 <a href=""><button class="yes-choice" >Yes</button></a>
@@ -23,14 +23,13 @@
         <h1>Users</h1>
         <section>
             <div class="search-bar">
-                <div>
+                <div id="bar-container">
                     <input placeholder="Search for an user" id="filter" type="text">
                     <button id="go-filter">Go</button>
-                </div>
-                <div id="not-found" class="error-msj hidden">
-                    <span>No existen usuarios que coincidan con ésta búsqueda</span>
+                    <a id="go-back" class="hidden" href="/users/"><button>Go back</button></a>
                 </div>
             </div>
+            <div class="error-msj hidden"><span></span></div>
             <div class="main-container">
             </div>
         </section>

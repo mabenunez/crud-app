@@ -1,8 +1,9 @@
 let mailError = "Ésta dirección de mail no es válida";
 let nameError = "Éste campo solo debe contener letras";
-let phoneError = "Éste campo solo debe contener números";
-let emptyError = "Éste campo debe ser completado";
-let errorSign = `<div class="error-msj"><span>${emptyError}</span></div>`;
+let phoneError = "Éste número telefónico no es válido";
+let emptyError = "Todos los campos debe ser completados";
+let notFoundError = "No existen usuarios que coincidan con ésta búsqueda";
+
 function append(data) {
     for (let i = 0; i < data.length; i++) {
         let id = data[i].id;
@@ -15,10 +16,17 @@ function append(data) {
         $(".main-container").append(`<div class="row" id="${id}">${name}${lastname}${phone}${mail}<div>${deleteIcon}${editIcon}</div></div>`)
     }
 }
-
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email.toLowerCase());
+}
+//ERROR MSJ CANT BE APPENDED THEY NEED TO BE SHOWN AND THE MSJ CHANGED DINAMICALLY
+function errorMsj (location, error) {
+    location.siblings(".error-msj").removeClass("hidden").html(`<span>${error}</span>`)
+
+    setTimeout(function () {
+        $(".error-msj").addClass("hidden");
+    }, 4000);
 }
 //GET ALL
 $.ajax(
@@ -32,12 +40,25 @@ $("#add").on("click", function() {
     let addedLastname = $("#add-lastname").val();
     let addedPhone = $("#add-phone").val();
     let addedMail = $("#add-mail").val()
+    if (addedName == "" || addedLastname == "" || addedPhone == "" || addedMail == "") {
+        errorMsj ($("#add-mail"), emptyError)
+        return
+    }
     if (validateEmail(addedMail) === false){
-        $("#add-mail").parent().append(`<div class="error-msj"><span>${mailError}</span></div>`)
-        setTimeout(function () {
-            $(".error-msj").remove();
-        }, 3000); 
-        return 
+        errorMsj ($("#add-mail"), mailError)
+        return
+    } 
+    if (!(/^\d+$/.test(addedPhone))) {
+        errorMsj ($("#add-phone"), phoneError)
+        return
+    }
+    if (!(/^[a-zA-Z]+$/.test(addedName))) {
+        errorMsj ($("#add-name"), nameError)
+        return
+    }
+    if (!(/^[a-zA-Z]+$/.test(addedLastname))) {
+        errorMsj ($("#add-name"), nameError)
+        return
     }
     $.ajax(
         "http://localhost:3000/api/users",
@@ -50,12 +71,14 @@ $("#add").on("click", function() {
                 mail: addedMail
             }
         }
-    )
+    ).done(function() {
+        $("#created-modal-container").removeClass("hidden");
+    })
 })
 //DELETE
 $(document).on("click", ".delete", function() {
     const id = $(this).parent().parent().parent().attr("id");
-    $("#modal-container").removeClass("hidden");
+    $("#delete-modal-container").removeClass("hidden");
     $(".yes-choice").parent().attr("href", `/api/users/${id}`)
     $(".yes-choice").on("click", function (params) {
         window.location.href = window.location.href + "/" + id;
@@ -69,50 +92,24 @@ $(document).on("click", ".delete", function() {
         })
     })
     $(".no-choice").on("click", function (params) {
-        $("#modal-container").addClass("hidden");
+        $("#delete-modal-container").addClass("hidden");
     })
-
 })
-
-
-//`<a href="/api/users/${id}"></i></a>`
-
-
-
-//     window.location.href = window.location.href + "/" + id;
-    
-//     $.ajax(
-//         "http://localhost:3000/api/users/" + id,
-//         {
-//             method: "DELETE",
-//         }
-//     ).done(function () {
-//         location.reload("http://localhost:3000/users/")
-//     })
-
-
-
-
-
-
-
+/*FILTER AND THEN GET */
 $("#go-filter").click(function () {
     let search = $("#filter").val()
     if(search.length === 0) {
-        $(".search-bar").append(`<div class="error-msj"><span>${emptyError}</span></div>`);
-        setTimeout(function () {
-            $(".error-msj").remove();
-        }, 3000); 
+        errorMsj ($(".search-bar"), emptyError)
         return
     }
     $.ajax("/api/users?search=" + search,
     ).done(function (data) {
         $(".main-container").html("")
+        $("#go-filter").siblings("#go-back").removeClass("hidden")
         append(data)
         if(data.length === 0) {
-            $("#not-found").removeClass("hidden");
+            errorMsj ($(".search-bar"), notFoundError)
         }
-        $(".search-bar").append(`<a href="/users/"><button>Go back</button></a>`);
     })
 })
 function charLimit(clickedInput) {
@@ -121,9 +118,6 @@ function charLimit(clickedInput) {
         var str = clickedInput.val()
         let currentLength = str.length;
         $(this).siblings("p").html(currentLength + "/" + maxlength)
-        // if( currentLength >= maxlength -1 ){
-        //     console.log("f")
-        // }
     });
 }
 $(".char-counted").on("click", function() {
@@ -132,9 +126,9 @@ $(".char-counted").on("click", function() {
 })
 //nodemon bin/www --ignore datos.json
 /*
--diseñar carteles de mensaje de error
--validador de chars en los nombres/phones/mails
--modals o carteles de success
+-validar en el edit.js
+-cambiar las validaciones a inglés
+-evitar que se appendee mas de una vez el mismo usuario (EN EL LADO DEL SERVIDOR Y DEL CLIENTE)
 -hacer que cuando se presione enter, baje al proximo campo de texto (en añadir y editar)
 -hacer que cuando se presione enter se active la búsqueda
 */

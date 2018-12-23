@@ -30,12 +30,13 @@ section {
   flex-direction: column;
   align-items: center;
   background-color: #f7f7f7;
-  width: 70vw;
+  width: 80vw;
   height: 70vh;
   margin: auto;
   -webkit-box-shadow: -1px 2px 16px 0px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: -1px 2px 16px 0px rgba(0, 0, 0, 0.2);
   box-shadow: -1px 2px 16px 0px rgba(0, 0, 0, 0.2);
+  overflow: scroll;
 }
 
 button {
@@ -78,10 +79,9 @@ main {
 }
 
 .main-container {
-  width: 80%;
+  width: 90%;
   height: 80%;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin: 30px 0 30px 50px;
   overflow: scroll;
   font-size: 14px;
 }
@@ -90,6 +90,10 @@ main {
   display: grid;
   grid-template-columns: 23% 23% 23% 23% 8%;
   grid-template-rows: 50px;
+  overflow-y: scroll;
+}
+.row div {
+  overflow-y: scroll;
 }
 
 i {
@@ -113,8 +117,6 @@ i {
 
 .error-msj {
   width: 350px;
-  margin-top: -10px;
-  margin-bottom: 10px;
   padding: 10px 20px;
   background: rgba(228, 0, 0, 0.479);
   transition: all 0.4s ease;
@@ -137,7 +139,7 @@ i {
   display: none;
 }
 
-#sure-modal {
+.modal-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -147,7 +149,7 @@ i {
   top: 15vh;
   left: 25%;
 }
-#sure-modal h2 {
+.modal-card h2 {
   margin-top: 40px;
 }
 
