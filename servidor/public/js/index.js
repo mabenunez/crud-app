@@ -1,8 +1,8 @@
-let mailError = "Ésta dirección de mail no es válida";
-let nameError = "Éste campo solo debe contener letras";
-let phoneError = "Éste número telefónico no es válido";
-let emptyError = "Todos los campos debe ser completados";
-let notFoundError = "No existen usuarios que coincidan con ésta búsqueda";
+let mailError = "Invalid e-mail address";
+let nameError = "This field can only contain letters";
+let phoneError = "Invalid phone number";
+let emptyError = "All fields must be completed";
+let notFoundError = "There aren't any users that match this search";
 
 function append(data) {
     for (let i = 0; i < data.length; i++) {
@@ -57,7 +57,7 @@ $("#add").on("click", function() {
         return
     }
     if (!(/^[a-zA-Z]+$/.test(addedLastname))) {
-        errorMsj ($("#add-name"), nameError)
+        errorMsj ($("#add-lastname"), nameError)
         return
     }
     $.ajax(

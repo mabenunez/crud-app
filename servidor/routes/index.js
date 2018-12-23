@@ -77,6 +77,12 @@ router.post('/api/users', function(req, res, next) {
   if(!(/^\d+$/.test(newUser.phone))){
     return res.status(400).end('invalid phone number');
   }
+  if (!(/^[a-zA-Z]+$/.test(newUser.name))) {
+    return res.status(400).end('invalid name');
+  }
+  if (!(/^[a-zA-Z]+$/.test(newUser.lastname))) {
+    return res.status(400).end('invalid name');
+  }
   users.push(newUser)
   fs.writeFileSync('datos.json', JSON.stringify(users));
   res.json(users);
@@ -101,6 +107,12 @@ router.put("/api/users/:id", function(req, res, next) {
   }
   if(!(/^\d+$/.test(newInfo.phone))){
     return res.status(400).end('invalid phone number');
+  }
+  if (!(/^[a-zA-Z]+$/.test(newInfo.name))) {
+    return res.status(400).end('invalid name');
+  }
+  if (!(/^[a-zA-Z]+$/.test(newInfo.lastname))) {
+    return res.status(400).end('invalid name');
   }
   fs.writeFileSync('datos.json', JSON.stringify(users));
   res.json(newInfo);
