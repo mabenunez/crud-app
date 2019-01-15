@@ -3,7 +3,6 @@ let nameError = "This field can only contain letters";
 let phoneError = "Invalid phone number";
 let emptyError = "All fields must be completed";
 let notFoundError = "There aren't any users that match this search";
-
 function append(data) {
     for (let i = 0; i < data.length; i++) {
         let id = data[i].id;
@@ -20,7 +19,6 @@ function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email.toLowerCase());
 }
-//ERROR MSJ CANT BE APPENDED THEY NEED TO BE SHOWN AND THE MSJ CHANGED DINAMICALLY
 function errorMsj (location, error) {
     location.siblings(".error-msj").removeClass("hidden").html(`<span>${error}</span>`)
 
@@ -52,11 +50,11 @@ $("#add").on("click", function() {
         errorMsj ($("#add-phone"), phoneError)
         return
     }
-    if (!(/^[a-zA-Z]+$/.test(addedName))) {
+    if (!(/^[a-zA-Z\s]+$/.test(addedName))) {
         errorMsj ($("#add-name"), nameError)
         return
     }
-    if (!(/^[a-zA-Z]+$/.test(addedLastname))) {
+    if (!(/^[a-zA-Z\s]+$/.test(addedLastname))) {
         errorMsj ($("#add-lastname"), nameError)
         return
     }
@@ -96,7 +94,7 @@ $(document).on("click", ".delete", function() {
     })
 })
 /*FILTER AND THEN GET */
-$("#go-filter").click(function () {
+$("#go-filter").on( "click", function () {
     let search = $("#filter").val()
     if(search.length === 0) {
         errorMsj ($(".search-bar"), emptyError)
@@ -124,11 +122,18 @@ $(".char-counted").on("click", function() {
     $(".chars").html("")
     charLimit($(this))
 })
+$('input').on('keypress', function (e) {
+    if (e.which == 13) {
+        e.preventDefault();
+        var $next = $('[tabIndex=' + (+this.tabIndex + 1) + ']');
+        if (!$next.length) {
+            $next = $('[tabIndex=1]');
+        }
+        $next.focus();
+    }
+});
 //nodemon bin/www --ignore datos.json
 /*
--validar en el edit.js
--cambiar las validaciones a inglés
--evitar que se appendee mas de una vez el mismo usuario (EN EL LADO DEL SERVIDOR Y DEL CLIENTE)
--hacer que cuando se presione enter, baje al proximo campo de texto (en añadir y editar)
+-evitar que se appendee mas de una vez el mismo usuario (EN EL LADO DEL SERVIDOR)
 -hacer que cuando se presione enter se active la búsqueda
 */

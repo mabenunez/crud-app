@@ -3,6 +3,12 @@ body {
   margin: 0;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 ::-webkit-scrollbar {
   width: 0.5em;
   height: 0.5em;
@@ -21,10 +27,6 @@ body {
   scrollbar-track-color: rgba(0, 0, 0, 0);
 }
 
-h1 {
-  text-align: center;
-}
-
 section {
   display: flex;
   flex-direction: column;
@@ -39,10 +41,14 @@ section {
   overflow: scroll;
 }
 
+h1 {
+  text-align: center;
+}
+
 button {
-  width: 150px;
   height: 40px;
   margin: 20px auto;
+  padding: 1px 10px 2px;
   background-color: black;
   color: white;
   font-weight: 600;
@@ -63,25 +69,32 @@ input {
   width: 300px;
   margin: 10px;
   padding: 10px 20px;
+  transition: all 0.4s ease;
   background: white;
   box-shadow: -1px 1px 3px 0px rgba(0, 0, 0, 0.1);
-  transition: all 0.4s ease;
 }
 input:focus {
   outline: none;
   box-shadow: 0px 9px 20px rgba(75, 72, 72, 0.3);
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.error-msj {
+  width: 350px;
+  padding: 10px 20px;
+  transition: all 0.4s ease;
+  background: #dd5e5e;
+  box-shadow: 0px 9px 20px rgba(75, 72, 72, 0.3);
+  text-align: center;
+}
+.error-msj span {
+  font-size: 12px;
+  color: #680000;
 }
 
 .main-container {
   width: 90%;
   height: 80%;
-  margin: 30px 0 30px 50px;
+  margin: 30px 0px 30px 50px;
   overflow: scroll;
   font-size: 14px;
 }
@@ -96,7 +109,7 @@ main {
   overflow-y: scroll;
 }
 
-i {
+fa-trash-alt, fa-user-edit {
   cursor: pointer;
   padding: 5px;
   color: black;
@@ -115,19 +128,6 @@ i {
   align-self: flex-end;
 }
 
-.error-msj {
-  width: 350px;
-  padding: 10px 20px;
-  background: rgba(228, 0, 0, 0.479);
-  transition: all 0.4s ease;
-  box-shadow: 0px 9px 20px rgba(75, 72, 72, 0.3);
-  text-align: center;
-}
-.error-msj span {
-  font-size: 12px;
-  color: #680000;
-}
-
 .search-bar {
   display: flex;
   flex-direction: column;
@@ -135,8 +135,11 @@ i {
   margin-top: 10px;
 }
 
-.hidden {
-  display: none;
+.modal-screen {
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.747);
+  position: fixed;
 }
 
 .modal-card {
@@ -153,11 +156,19 @@ i {
   margin-top: 40px;
 }
 
-.modal-screen {
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.747);
-  position: fixed;
+.hidden {
+  display: none;
+}
+
+@media (max-width: 790px) {
+  section {
+    width: 90vw;
+    height: 80vh;
+  }
+
+  .input-container input {
+    width: 90%;
+  }
 }
 
 /*# sourceMappingURL=styles.css.map */

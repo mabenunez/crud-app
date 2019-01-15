@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
+const indexController= require("../controllers/index");
 let filtered = [];
 router.get("/users", function (req, res) {
   res.sendFile( path.join(__dirname, "..", "public", "html", "index.html"))  
@@ -16,15 +17,11 @@ function validateEmail(email) {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email.toLowerCase());
 }
-/* GET home page. */
+
 router.get('/ping', function(req, res, next) {
   res.send("pong")
 });
-// router.get('/api/users', function(req, res, next) {
-//   let contenidoDelArchivo = fs.readFileSync('datos.json');
-//   let users = JSON.parse(contenidoDelArchivo);
-//   res.json(users);
-// });
+/* GET one */
 router.get('/api/users/:id', function(req, res, next) {
   let contenidoDelArchivo = fs.readFileSync('datos.json');
   let users = JSON.parse(contenidoDelArchivo);

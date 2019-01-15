@@ -1,3 +1,10 @@
+$sectionShadowAdapt: -1px 2px 16px 0px rgba(0,0,0,0.2);
+$boxShadowInput: -1px 1px 3px 0px rgba(0,0,0,0.1);
+$focusedBoxShadow: 0px 9px 20px rgba(#4B4848, 0.3);
+$errorBackground: rgb(221, 94, 94);
+$errorColor: rgb(104, 0, 0);
+$sectionBackground: rgb(247, 247, 247);
+$modalOpacityBackground: rgba(0, 0, 0, 0.747);
 @mixin flexColumn {
     display: flex;
     flex-direction: column;
@@ -23,25 +30,29 @@ body {
     font-family: helvetica;
     margin: 0;
 }
-@include scrollbars(.5em, rgb(172, 172, 172));
-h1 {
-    text-align: center;
+main{
+    @include flexColumn;
 }
+@include scrollbars(.5em, rgb(172, 172, 172));
 section {
     @include flexColumn;
-    background-color: rgb(247, 247, 247);
+    background-color: $sectionBackground;
     width: 80vw;
     height: 70vh;
     margin: auto;
-    -webkit-box-shadow: -1px 2px 16px 0px rgba(0,0,0,0.2);
-    -moz-box-shadow: -1px 2px 16px 0px rgba(0,0,0,0.2);
-    box-shadow: -1px 2px 16px 0px rgba(0,0,0,0.2);
+    -webkit-box-shadow: $sectionShadowAdapt;
+    -moz-box-shadow: $sectionShadowAdapt;
+    box-shadow: $sectionShadowAdapt;
     overflow:  scroll;
 }
+h1 {
+    text-align: center;
+}
 button {
-    width: 150px;
+    //width: 150px;
     height: 40px;
     margin: 20px auto;
+    padding: 1px 10px 2px;
     background-color: black;
     color: white;
     font-weight: 600;
@@ -59,21 +70,30 @@ input {
     width: 300px;
     margin: 10px ;
     padding: 10px 20px;
+    transition: all 0.4s ease;
     background: white;
     box-shadow: -1px 1px 3px 0px rgba(0,0,0,0.1);
-    transition: all 0.4s ease;
     &:focus {
       outline: none;
-      box-shadow: 0px 9px 20px rgba(#4B4848, 0.3);
+      box-shadow: $focusedBoxShadow;
     }
 }
-main{
-    @include flexColumn;
+.error-msj {
+    width: 350px;
+    padding: 10px 20px;
+    transition: all 0.4s ease;
+    background: $errorBackground;
+    box-shadow: $focusedBoxShadow;
+    text-align: center;
+    span {
+        font-size: 12px;
+        color:$errorColor;
+    }
 }
 .main-container {
     width: 90%;
     height: 80%;
-    margin: 30px 0 30px 50px;
+    margin: 30px 0px 30px 50px;
     overflow: scroll;
     font-size: 14px;
 }
@@ -81,12 +101,12 @@ main{
     display: grid;
     grid-template-columns: 23% 23% 23% 23% 8%;
     grid-template-rows: 50px;
-    overflow-y: scroll;
+    overflow-y: auto;
     div {
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 }
-i {
+fa-trash-alt, fa-user-edit  {
     cursor: pointer;
     padding: 5px;
     color: black;
@@ -101,26 +121,21 @@ i {
         align-self: flex-end;
     }
 }
-.error-msj {
-    width: 350px;
-    // margin-top: -10px;
-    // margin-bottom: 30px;
-    padding: 10px 20px;
-    background: rgba(228, 0, 0, 0.479);
-    transition: all 0.4s ease;
-    box-shadow: 0px 9px 20px rgba(#4B4848, 0.3);
-    text-align: center;
-    span {
-        font-size: 12px;
-        color:rgb(104, 0, 0);
-    }
-}
 .search-bar {
     @include flexColumn;
     margin-top: 10px;
+    // width: 90%;
 }
-.hidden {
-    display: none;
+// #bar-container {
+//     display: grid;
+//     grid-template-columns: 60% 20% 20%;
+//     grid-template-rows: 50px;
+// }
+.modal-screen {
+    width: 100%;
+    height: 100vh; 
+    background-color: $modalOpacityBackground;
+    position: fixed;
 }
 .modal-card {
     @include flexColumn;
@@ -133,9 +148,22 @@ i {
         margin-top: 40px;
     }
 }
-.modal-screen {
-    width: 100%;
-    height: 100vh; 
-    background-color: rgba(0, 0, 0, 0.747);
-    position: fixed;
+.hidden {
+    display: none;
+}
+@media (max-width: 790px) {
+    section {
+        width: 90vw;
+        height: 80vh;
+    }
+    .input-container {
+        input {
+            width: 90%;
+        }
+    }
+    // #bar-container {
+    //     input {
+
+    //     }
+    // }
 }

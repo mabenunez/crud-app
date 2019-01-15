@@ -39,7 +39,6 @@ $.ajax(
 });
 //EDIT
 $("#save-edited").on("click", function() {
-    console.log("gvygcfytrdstre")
     const ename =$("#edit-name").val();
     const elastname = $("#edit-lastname").val()
     const ephone = $("#edit-phone").val()
@@ -56,11 +55,11 @@ $("#save-edited").on("click", function() {
         errorMsj ($("#edit-phone"), phoneError)
         return
     }
-    if (!(/^[a-zA-Z]+$/.test(ename))) {
+    if (!(/^[a-zA-Z\s]+$/.test(ename))) {
         errorMsj ($("#edit-name"), nameError)
         return
     }
-    if (!(/^[a-zA-Z]+$/.test(elastname))) {
+    if (!(/^[a-zA-Z\s]+$/.test(elastname))) {
         errorMsj ($("#edit-lastname"), nameError)
         return
     }
