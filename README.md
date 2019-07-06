@@ -17,3 +17,7 @@ Each user is an object with this format:
 
 - DELETE: requires an ID, wich is passed from the HTML to JS (through the window.location.href) and then splices the index from the array of users.
 
+To start this project:
+-Clone or download the repository.
+-Inside the folder "servidor", run "nodemon bin/www" to start server
+-In your browser, go to http://localhost:3000/users
